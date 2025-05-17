@@ -1,32 +1,108 @@
+<!-- popup.html -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>One Click Less</title>
   <style>
-    body {
-      width: 300px;
-      font-family: Arial, sans-serif;
-      padding: 15px;
+    :root {
+      --primary: #4285f4;
+      --primary-dark: #3b78e7;
+      --secondary: #34a853;
+      --accent: #ea4335;
+      --light-bg: #f8f9fa;
+      --dark-text: #202124;
+      --grey-text: #5f6368;
+      --light-grey: #dadce0;
+    }
+    
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 2;
+      padding: 5;
+      font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+      color: var(--dark-text);
+      background-color: white;
+    }
+    
+    #app-container {
+      width: 100%;
+      max-width: 550px;
+      margin: 0 auto;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    
+    .header {
+      background-color: var(--primary);
+      color: white;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    
+    .logo img {
+      width: 30px;
+      height: 30px;
+      object-fit: contain;
+    }
+    
+    .title-container {
+      flex: 1;
     }
     
     h1 {
-      font-size: 16px;
-      color: #4285f4;
-      margin-top: 0;
+      font-size: 20px;
+      margin: 0;
+      font-weight: 500;
+    }
+    
+    .tagline {
+      font-size: 14px;
+      margin-top: 5px;
+      opacity: 0.9;
+    }
+    
+    .container {
+      padding: 20px;
+      flex: 1;
     }
     
     .info {
-      margin-bottom: 15px;
+      margin-bottom: 25px;
+      line-height: 1.5;
+      font-size: 15px;
     }
     
     .shortcut {
-      background-color: #f5f5f5;
-      padding: 10px;
+      background-color: var(--light-bg);
+      padding: 12px 15px;
       border-radius: 4px;
-      margin-bottom: 15px;
-      font-family: monospace;
+      margin-bottom: 25px;
+      font-family: 'Courier New', monospace;
       display: flex;
       align-items: center;
+      border-left: 4px solid var(--primary);
     }
     
     .shortcut-key {
@@ -35,74 +111,153 @@
     }
     
     .examples {
-      margin-top: 15px;
+      margin-top: 25px;
     }
     
-    .examples h2 {
-      font-size: 14px;
-      margin-bottom: 5px;
+    .examples-title {
+      font-size: 16px;
+      margin-bottom: 15px;
+      color: var(--primary);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .examples-title::before {
+      content: "🐝";
     }
     
     .examples ul {
       padding-left: 20px;
-      margin-top: 5px;
+      margin-top: 10px;
+      margin-bottom: 0;
     }
     
     .examples li {
-      margin-bottom: 5px;
-      font-size: 12px;
+      margin-bottom: 12px;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .google-service {
+      color: var(--secondary);
+      font-weight: 500;
     }
     
-    .footer {
-      font-size: 12px;
-      color: #666;
-      margin-top: 15px;
-      text-align: center;
+    .button-row {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
     }
     
     .button {
-      background-color: #4285f4;
+      background-color: var(--primary);
       color: white;
       border: none;
-      padding: 8px 12px;
+      padding: 12px 20px;
       border-radius: 4px;
       cursor: pointer;
       display: inline-block;
       text-decoration: none;
-      font-size: 12px;
+      font-size: 14px;
       text-align: center;
+      font-weight: 500;
+      flex: 1;
+      transition: background-color 0.2s;
     }
     
     .button:hover {
-      background-color: #3b78e7;
+      background-color: var(--primary-dark);
+    }
+
+    .secondary-button {
+      background-color: white;
+      color: var(--primary);
+      border: 1px solid var(--primary);
+    }
+    
+    .secondary-button:hover {
+      background-color: #f0f7ff;
+    }
+    
+    .privacy-notice {
+      font-size: 12px;
+      background-color: #fef7e0;
+      padding: 12px 15px;
+      border-radius: 4px;
+      margin-top: 25px;
+      border-left: 3px solid #fbbc04;
+      color: #614a19;
+    }
+    
+    /* Chrome extension popup mode */
+    @media (max-width: 600px) {
+      #app-container {
+        width: 100%;
+        max-width: none;
+        box-shadow: none;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>One Click Less</h1>
-  
-  <div class="info">
-    Save time by using AI to determine the best search category and time filters automatically.
+  <div id="app-container">
+    <div class="header">
+      <div class="logo-container">
+        <div class="logo">
+          <img src="icons/icon128.png" alt="One Click Less Logo">
+        </div>
+        <div class="title-container">
+          <h1>One Click Less</h1>
+          <div class="tagline">AI-powered search redirection</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="container">
+      <div class="info">
+        Save time by using AI to automatically determine the best search category and time filters based on your query.
+      </div>
+      
+      <div class="shortcut">
+        <span class="shortcut-key">Type:</span> ask [Tab] your search query
+      </div>
+      
+      <div class="examples">
+        <div class="examples-title">Example searches:</div>
+        <ul>
+          <li>"sunset images" → <span class="google-service">Google Images</span></li>
+          <li>"best price iphone" → <span class="google-service">Google Shopping</span></li>
+          <li>"coffee shops near me" → <span class="google-service">Google Maps</span></li>
+          <li>"news about AI past week" → <span class="google-service">Google News with time filter</span></li>
+        </ul>
+      </div>
+      
+      <div class="button-row">
+        <a href="options.html" class="button">Settings</a>
+        <a href="https://github.com/manoj2003nov/one-click-less" target="_blank" class="button secondary-button">GitHub</a>
+      </div>
+      
+      <div class="privacy-notice">
+        <strong>Privacy Notice:</strong> Your HuggingFace token is used solely for API calls. No search data is collected or stored by this extension.
+      </div>
+    </div>
   </div>
-  
-  <div class="shortcut">
-    <span class="shortcut-key">Type:</span> ask [Tab] your search query
-  </div>
-  
-  <div class="examples">
-    <h2>Example searches:</h2>
-    <ul>
-      <li>"sunset images" → Google Images</li>
-      <li>"best price iphone" → Google Shopping</li>
-      <li>"coffee shops near me" → Google Maps</li>
-      <li>"news about AI past week" → Google News with time filter</li>
-    </ul>
-  </div>
-  
-  <a href="options.html" target="_blank" class="button">Settings</a>
-  
-  <div class="footer">
-    Need help? Check the settings page for more examples.
-  </div>
+
+  <script>
+    // This ensures proper sizing for both popup and direct HTML viewing
+    function adjustSize() {
+      // If viewed as a popup in Chrome extension
+      if (window.innerWidth < 600) {
+        document.body.style.width = '100%';
+        document.getElementById('app-container').style.width = '100%';
+      }
+    }
+    
+    // Run on load and when window is resized
+    window.addEventListener('load', adjustSize);
+    window.addEventListener('resize', adjustSize);
+  </script>
 </body>
 </html>

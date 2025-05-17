@@ -1,31 +1,29 @@
-
 import { getCategoryFromLLM } from './categoryPrediction.js';
 import { getTimeFilter } from './timeFilter.js';
 
-chrome.omnibox.onInputEntered.addListener(async (text) => {
-  console.log("Query entered:", text);
+chrome.omnibox.onInputEntered.addListener(async (qtext) => {
+  console.log("Query entered:", qtext);
   
   try {
     // Get category prediction and time filter in parallel
     const [category, timeParams] = await Promise.all([
-      getCategoryFromLLM(text),
-      getTimeFilter(text)
+      getCategoryFromLLM(qtext),
+      getTimeFilter(qtext)
     ]);
     
     console.log("Category:", category);
     console.log("Time filter:", timeParams);
     
-    const baseUrl = "https://www.google.com/search?q=" + encodeURIComponent(text);
+    const baseUrl = "https://www.google.com/search?q=" + encodeURIComponent(qtext);
     
     // Build the final URL with appropriate parameters
-    const finalUrl = buildSearchUrl(baseUrl, category, timeParams);
+    const finalUrl = buildSearchUrl(baseUrl, category, timeParams, qtext);
     console.log("Opening URL:", finalUrl);
     
     chrome.tabs.create({ url: finalUrl });
   } catch (error) {
     console.error("Error processing search:", error);
-    // Fallback to regular search
-    const fallbackUrl = "https://www.google.com/search?q=" + encodeURIComponent(text);
+    const fallbackUrl = "https://www.google.com/search?q=" + encodeURIComponent(qtext);
     chrome.tabs.create({ url: fallbackUrl });
   }
 });
@@ -35,9 +33,10 @@ chrome.omnibox.onInputEntered.addListener(async (text) => {
  * @param {string} baseUrl - Base search URL with query
  * @param {string} category - Search category
  * @param {Object} timeParams - Time filter parameters
+ * @param {string} queryText - Original search query text
  * @returns {string} - Final search URL
  */
-function buildSearchUrl(baseUrl, category, timeParams) {
+function buildSearchUrl(baseUrl, category, timeParams, queryText) {
   const params = new URLSearchParams();
   
   // Category parameter mapping
@@ -73,7 +72,7 @@ function buildSearchUrl(baseUrl, category, timeParams) {
     
     // If this is a location search, redirect to Google Maps directly
     if (timeParams.isLocationSearch) {
-      return `https://www.google.com/maps/search/${encodeURIComponent(text)}`;
+      return `https://www.google.com/maps/search/${encodeURIComponent(queryText)}`;
     }
   }
   

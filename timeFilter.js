@@ -1,4 +1,3 @@
-// timeFilter.js
 /**
  * Extract time filter parameters from user query
  * @param {string} query - User query

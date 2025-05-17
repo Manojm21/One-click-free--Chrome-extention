@@ -25,6 +25,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 2000);
   }
   
+  // Function to validate Hugging Face API key
+  function validateHuggingFaceApiKey(key) {
+    // Basic validation - Hugging Face tokens typically start with "hf_"
+    return typeof key === 'string' && 
+           key.trim().length > 0 && 
+           /^hf_[a-zA-Z0-9]+$/.test(key);
+  }
+  
   // Check if we're running in a Chrome extension context
   if (typeof chrome !== 'undefined') {
     try {
@@ -45,6 +53,12 @@ document.addEventListener('DOMContentLoaded', function() {
       optionsForm.addEventListener('submit', function(e) {
         e.preventDefault();
         const apiKey = apiKeyInput.value.trim();
+        
+        // Validate API key format if provided
+        if (apiKey && !validateHuggingFaceApiKey(apiKey)) {
+          showStatus('Invalid API key format. Hugging Face API keys typically start with "hf_"', true);
+          return;
+        }
         
         chrome.storage.sync.set({huggingfaceApiKey: apiKey}, function() {
           if (chrome.runtime.lastError) {

@@ -1,4 +1,4 @@
-// categoryPrediction.js
+
 /**
  * Get search category prediction combining local patterns and HuggingFace LLM
  * @param {string} query - User query
@@ -21,6 +21,12 @@ export async function getCategoryFromLLM(query) {
       return localCategory; // Use local pattern matching only
     }
     
+    // Validate API token format before using it
+    if (!validateApiToken(API_TOKEN)) {
+      console.error("Invalid Hugging Face API token format");
+      return localCategory; 
+    }
+    
     // If no clear local pattern, use HuggingFace Inference API
     const API_URL = "https://api-inference.huggingface.co/models/facebook/bart-large-mnli";
     
@@ -35,6 +41,9 @@ export async function getCategoryFromLLM(query) {
       }
     };
     
+    // Create an abort controller with timeout fallback
+    const controller = createAbortController(3000);
+    
     const response = await fetch(API_URL, {
       method: "POST",
       headers: {
@@ -42,8 +51,7 @@ export async function getCategoryFromLLM(query) {
         "Content-Type": "application/json"
       },
       body: JSON.stringify(payload),
-      // Set timeout to 3 seconds to keep the extension responsive
-      signal: AbortSignal.timeout(3000)
+      signal: controller.signal
     });
     
     if (!response.ok) {
@@ -52,6 +60,13 @@ export async function getCategoryFromLLM(query) {
     }
     
     const result = await response.json();
+    
+    // Handle empty or invalid API response
+    if (!result || !Array.isArray(result.labels) || result.labels.length === 0) {
+      console.error("Invalid API response format:", result);
+      return "All";
+    }
+    
     console.log("HF API result:", result);
     
     // Expanded category mapping
@@ -82,6 +97,38 @@ export async function getCategoryFromLLM(query) {
     console.error("Error in LLM category prediction:", error);
     return "All"; // Fallback to default search on error
   }
+}
+
+/**
+ * Creates an AbortController with timeout
+ * @param {number} timeoutMs - Timeout in milliseconds
+ * @returns {AbortController} - AbortController instance
+ */
+function createAbortController(timeoutMs) {
+  const controller = new AbortController();
+  
+  // Create our own timeout if AbortSignal.timeout is not available
+  if (typeof AbortSignal.timeout === 'function') {
+    return { signal: AbortSignal.timeout(timeoutMs) };
+  } else {
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+    // Clean up the timeout if the controller is aborted
+    controller.signal.addEventListener('abort', () => clearTimeout(timeoutId));
+    return controller;
+  }
+}
+
+/**
+ * Validates the Hugging Face API token format
+ * @param {string} token - API token to validate
+ * @returns {boolean} - Whether the token is valid
+ */
+function validateApiToken(token) {
+  // Basic validation - Hugging Face tokens typically start with "hf_"
+  // and are followed by a string of characters
+  return typeof token === 'string' && 
+         token.trim().length > 0 && 
+         /^hf_[a-zA-Z0-9]+$/.test(token);
 }
 
 /**
