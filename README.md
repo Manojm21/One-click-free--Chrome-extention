@@ -23,10 +23,11 @@
 ### Step 2: Set HuggingFace API Token (Optional but Recommended)
 
 1. Click on the extension icon in the Chrome toolbar.
-2. Then click **settings**.
-3. Enter your **HuggingFace API Token** (get it from: [https://huggingface.co/settings/tokens](https://huggingface.co/settings/tokens)).
-4. make sure to check "Make calls to Inference Providers" under the Inference permission while token creation.
-5. Click **Save**.
+2. Now click on the extention "One Click Less".
+3. A Popup appears where you need to click on **settings** button.
+4. Enter your **HuggingFace API Token** (get it from: [https://huggingface.co/settings/tokens](https://huggingface.co/settings/tokens)).
+5. make sure to check "Make calls to Inference Providers" under the Inference permission while token creation.
+6. Click **Save**.
 
 ---
 
