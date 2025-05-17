@@ -13,7 +13,7 @@
 1. Download or clone the repository from GitHub:
 
    ```bash
-   git clone https://github.com/Manojm21/One-click-free--Chrome-extention.git
+   git clone https://github.com/Manojm21/One-click-less--Chrome-extention.git
    ```
 2. Open Chrome and go to: `chrome://extensions/`
 3. Enable **Developer mode** (top right corner).
