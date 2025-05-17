@@ -19,12 +19,14 @@
 3. Enable **Developer mode** (top right corner).
 4. Click **"Load unpacked"** and select the `one-click-less` folder.
 
+
 ### Step 2: Set HuggingFace API Token (Optional but Recommended)
 
 1. Click on the extension icon in the Chrome toolbar.
-2. Open **Options**.
+2. Then click **settings**.
 3. Enter your **HuggingFace API Token** (get it from: [https://huggingface.co/settings/tokens](https://huggingface.co/settings/tokens)).
-4. Click **Save**.
+4. make sure to check "Make calls to Inference Providers" under the Inference permission while token creation.
+5. Click **Save**.
 
 ---
 
