@@ -44,7 +44,7 @@
 
 | Query                     | Predicted Category | Resulting Tab   |
 | ------------------------- | ------------------ | --------------- |
-| `Elon Musk latest news`   | News               | Google News     |
+| `news about AI past week`   | News               | Google News with time filter     |
 | `restaurants near me`     | Maps               | Google Maps     |
 | `sunset beach wallpaper`  | Images             | Google Images   |
 | `buy wireless headphones` | Shopping           | Google Shopping |
