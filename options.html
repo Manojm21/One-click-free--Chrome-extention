@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>One Click Less - Options</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      line-height: 1.5;
+      color: #333;
+    }
+    
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    h1 {
+      color: #4285f4;
+      margin-bottom: 20px;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    
+    button {
+      background-color: #4285f4;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    button:hover {
+      background-color: #3b78e7;
+    }
+    
+    #reset-settings {
+      background-color: #f44336;
+      margin-left: 10px;
+    }
+    
+    #reset-settings:hover {
+      background-color: #e53935;
+    }
+    
+    #status {
+      margin-top: 15px;
+      padding: 10px;
+      background-color: #e8f0fe;
+      border-radius: 4px;
+      display: none;
+    }
+    
+    #status:not(:empty) {
+      display: block;
+    }
+    
+    .help-text {
+      font-size: 0.9em;
+      color: #666;
+      margin-top: 5px;
+    }
+    
+    .section {
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #eee;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>One Click Less - Options</h1>
+    
+    <div class="section">
+      <p>This extension helps you search faster by automatically detecting the best search category and time filters based on your query.</p>
+      <p>To use it, type <strong>ask</strong> in the address bar, press Tab, then type your search query.</p>
+    </div>
+    
+    <form id="options-form">
+      <div class="form-group">
+        <label for="api-key">HuggingFace API Key:</label>
+        <input type="text" id="api-key" placeholder="hf_..." />
+        <p class="help-text">Get a free API key from <a href="https://huggingface.co/settings/tokens" target="_blank">HuggingFace</a>.</p>
+      </div>
+      
+      <div class="form-group">
+        <button type="submit">Save Settings</button>
+        <button type="button" id="reset-settings">Reset Settings</button>
+        <div id="status"></div>
+      </div>
+    </form>
+    
+    <div class="section">
+      <h2>How to Use</h2>
+      <p>Examples of queries you can try:</p>
+      <ul>
+        <li><strong>hotels in paris</strong> - Opens Google Maps with hotels in Paris</li>
+        <li><strong>news about AI past week</strong> - Opens Google News with last week's AI news</li>
+        <li><strong>apple macbook pro pictures</strong> - Opens Google Images search</li>
+        <li><strong>harry potter books</strong> - Opens Google Books search</li>
+        <li><strong>reddit discussions about movies past month</strong> - Opens Forum search with time filter</li>
+      </ul>
+    </div>
+  </div>
+  
+  <script src="options.js"></script>
+</body>
+</html>
