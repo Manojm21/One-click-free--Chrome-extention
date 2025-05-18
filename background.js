@@ -1,29 +1,30 @@
 import { getCategoryFromLLM } from './categoryPrediction.js';
 import { getTimeFilter } from './timeFilter.js';
 
-chrome.omnibox.onInputEntered.addListener(async (qtext) => {
-  console.log("Query entered:", qtext);
+chrome.omnibox.onInputEntered.addListener(async (text) => {
+  console.log("Query entered:", text);
   
   try {
     // Get category prediction and time filter in parallel
     const [category, timeParams] = await Promise.all([
-      getCategoryFromLLM(qtext),
-      getTimeFilter(qtext)
+      getCategoryFromLLM(text),
+      getTimeFilter(text)
     ]);
     
     console.log("Category:", category);
     console.log("Time filter:", timeParams);
     
-    const baseUrl = "https://www.google.com/search?q=" + encodeURIComponent(qtext);
+    const baseUrl = "https://www.google.com/search?q=" + encodeURIComponent(text);
     
     // Build the final URL with appropriate parameters
-    const finalUrl = buildSearchUrl(baseUrl, category, timeParams, qtext);
+    const finalUrl = buildSearchUrl(baseUrl, category, timeParams, text);
     console.log("Opening URL:", finalUrl);
     
     chrome.tabs.create({ url: finalUrl });
   } catch (error) {
     console.error("Error processing search:", error);
-    const fallbackUrl = "https://www.google.com/search?q=" + encodeURIComponent(qtext);
+    // Fallback to regular search
+    const fallbackUrl = "https://www.google.com/search?q=" + encodeURIComponent(text);
     chrome.tabs.create({ url: fallbackUrl });
   }
 });
@@ -46,7 +47,7 @@ function buildSearchUrl(baseUrl, category, timeParams, queryText) {
     "Shopping": "shop", 
     "Videos": "vid",
     "Short videos": "vid",
-    "Forums": "dsc",
+    "Forums": "",  // Google no longer supports direct forum search with tbm parameter
     "Books": "bks",
     "Maps": "lcl",  // Local results (closest to maps in omnibox)
     "Web": "",
@@ -57,6 +58,27 @@ function buildSearchUrl(baseUrl, category, timeParams, queryText) {
   const tbm = tbmMap[category] || "";
   if (tbm) {
     params.append("tbm", tbm);
+  }
+  
+  // Handle Forums category specially - append discussion-related terms
+  if (category === "Forums") {
+    // Always modify the query to enhance forum results
+    let modifiedQuery = queryText;
+    
+    // Check if we need to add forum-specific search operators
+    if (!queryText.toLowerCase().includes("site:reddit.com") && 
+        !queryText.toLowerCase().includes("site:quora.com") && 
+        !queryText.toLowerCase().includes("site:stackoverflow.com")) {
+      
+      // Add site-specific searches to prioritize discussion sites
+      modifiedQuery = queryText + " (site:reddit.com OR site:quora.com OR site:stackexchange.com OR inurl:forum OR inurl:community OR inurl:discuss)";
+    }
+    
+    // Create a new base URL with the modified query
+    baseUrl = "https://www.google.com/search?q=" + encodeURIComponent(modifiedQuery);
+    
+    // Add discussion-oriented search parameters
+    params.append("ncr", "1"); // No country redirect
   }
   
   // Add time filter parameters if applicable

@@ -1,4 +1,3 @@
-
 /**
  * Get search category prediction combining local patterns and HuggingFace LLM
  * @param {string} query - User query
