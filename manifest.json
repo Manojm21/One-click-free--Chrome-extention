@@ -1,10 +1,9 @@
-
 {
   "manifest_version": 3,
   "name": "One click less",
   "version": "1.0",
   "description": "Automatically redirects search queries to the best Google search tab using HuggingFace AI.",
-  "permissions": ["tabs", "omnibox", "storage"],
+  "permissions": ["omnibox", "storage"],
   "background": {
     "service_worker": "background.js",
     "type": "module"
